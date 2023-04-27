@@ -1,0 +1,21 @@
+{
+    "projectId": "644650a1c91aceca4b43",
+    "projectName": "Certify",
+    "functions": [
+        {
+            "$id": "644916de108bebdcde09",
+            "name": "Handle New User",
+            "runtime": "node-16.0",
+            "path": "functions/Handle New User",
+            "entrypoint": "src/index.js",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "execute": [],
+            "events": ["users.*.create"],
+            "schedule": "",
+            "timeout": 15
+        }
+    ]
+}
