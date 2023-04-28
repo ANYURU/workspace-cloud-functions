@@ -1,56 +1,56 @@
 const sdk = require("node-appwrite");
-
-/*
-  'req' variable has:
-    'headers' - object with request headers
-    'payload' - request body data as a string
-    'variables' - object with function variables
-
-  'res' variable has:
-    'send(text, status)' - function to return text response. Status code defaults to 200
-    'json(obj, status)' - function to return JSON response. Status code defaults to 200
-
-  If an error is thrown, a response with code 500 will be returned.
-*/
-
 module.exports = async function (req, res) {
   const client = new sdk.Client();
 
-  // You can remove services you don't use
-  const account = new sdk.Account(client);
-  const avatars = new sdk.Avatars(client);
-  const database = new sdk.Databases(client, req.variables.APPWRITE_DATABASE_ID);
-  const functions = new sdk.Functions(client);
-  const health = new sdk.Health(client);
-  const locale = new sdk.Locale(client);
-  const storage = new sdk.Storage(client);
-  const teams = new sdk.Teams(client);
-  const users = new sdk.Users(client);
-
   if (
     !req.variables['APPWRITE_FUNCTION_ENDPOINT'] ||
-    !req.variables['APPWRITE_FUNCTION_API_KEY']
+    !req.variables['APPWRITE_FUNCTION_PROJECT_ID'] ||
+    !req.variables['SECRET_KEY']
   ) {
     console.warn("Environment variables are not set. Function cannot use Appwrite SDK.");
   } else {
     client
       .setEndpoint(req.variables['APPWRITE_FUNCTION_ENDPOINT'])
       .setProject(req.variables['APPWRITE_FUNCTION_PROJECT_ID'])
-      .setKey(req.variables['APPWRITE_FUNCTION_API_KEY'])
+      .setKey(req.variables['SECRET_KEY'])
       .setSelfSigned(true);
+    
+    // You can remove services you don't use
+    const users = new sdk.Users(client);
+    const teams = new sdk.Teams(client);
 
-    console.log(req)
+    const newUser = JSON.parse(req.variables.APPWRITE_FUNCTION_EVENT_DATA)
+    const allUsers = await users.list();
+    const roles = allUsers.total === 1 ? ['superAdmin', 'owner'] : ['member'];
 
-    let allUsers = await users.list()
-    if ( allUsers?.length === 1 ) {
-      const team = await teams.create('unique()', 'system');
-      if( teams ) {
-        res.json(team)
-      } else {
-        res.json(allUsers)
+    await teams.createMembership(
+      req.variables.SYSTEM_TEAM_ID, 
+      newUser['email'], 
+      roles, 
+      'http://localhost:3000'
+    )
+  
+    const newUsersDocument = await databases.createDocument(
+      req.variables.APPWRITE_DATABASE_ID, 
+      req.variables.USERS_COLLECTION_ID, 
+      newUser['$id'], 
+      { 
+        role: allUsers.length === 1 ? 'superadmin' : "member",
+        isPremium: false
       }
-    }
-  }
+    );
 
- 
+    res.json({ newUsersDocument })
+
+    // await databases.createDocument(
+    //   req.variables.DATABASE_COLLECTION_ID,
+    //   req.variables.APPWRITE_USER_ORG_COLLECTION_ID,
+    //   'unique()',
+    //   {
+    //     userID: newUser['$id'],
+    //     orgID: req.variables.DEFAULT_ORG_ID,
+    //     role: allUsers.length === 1 ? 'superadmin' : "member"
+    //   } 
+    // )    
+  } 
 };
