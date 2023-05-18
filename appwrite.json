@@ -13,7 +13,24 @@
                 ".npm"
             ],
             "execute": [],
-            "events": ["users.*.create"],
+            "events": [
+                "users.*.create"
+            ],
+            "schedule": "",
+            "timeout": 15
+        },
+        {
+            "$id": "644bc469210fa6c4c920",
+            "name": "Handle Deleted User",
+            "runtime": "node-16.0",
+            "path": "functions/Handle Deleted User",
+            "entrypoint": "src/index.js",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "execute": [],
+            "events": [],
             "schedule": "",
             "timeout": 15
         }
