@@ -1,10 +1,20 @@
 # Handle New User
-
-Welcome to the documentation of this function 👋 We strongly recommend keeping this file in sync with your function's logic to make sure anyone can easily understand your function in the future. If you don't need documentation, you can remove this file.
+<!-- 
+Welcome to the documentation of this function 👋 We strongly recommend keeping this file in sync with your function's logic to make sure anyone can easily understand your function in the future. If you don't need documentation, you can remove this file. -->
+A cloud function to handle user at creation.
 
 ## 🤖 Documentation
 
-Simple function similar to typical "hello world" example, but instead, we return a simple JSON that tells everyone how awesome developers are.
+The cloud function is designed to perform specific tasks upon the creation of a new user in the system. It carries out the following actions:
+
+1. Creation of a New Document: It creates a new document within the users collection, representing the newly registered user. This document will contain the relevant user information such as name, email, and other necessary details.
+
+2. Assignment of Free Package: Upon creating the user document, the function automatically assigns a free package to the newly registered user. The details of the free package, such as its features and limitations, will be included in the user document.
+
+3. Addition of the user to the system team: It adds the user to the system team. If the user is the first to be added as a member or an administrator.
+
+By executing these tasks, the cloud function seamlessly handles the registration process for new users, creating user documents, assigning the appropriate package as well as the right roles in the system.
+
 
 <!-- Update with your description, for example 'Create Stripe payment and return payment URL' -->
 
@@ -17,6 +27,7 @@ This function expects no input
 _Example output:_
 
 <!-- Update with your expected output -->
+This function has no output
 
 ```json
 {
@@ -30,18 +41,14 @@ List of environment variables used by this cloud function:
 
 - **APPWRITE_FUNCTION_ENDPOINT** - Endpoint of Appwrite project
 - **APPWRITE_FUNCTION_API_KEY** - Appwrite API Key
+- **SECRET_KEY** - Appwrite API key
+- **APPWRITE_FUNCTION_EVENT_DATA** - The object of the new user returned after creation o f the user
+- **APPWRITE_DATABASE_ID** - Appwrite Database ID
+- **USER_COLLECTION_ID** - Appwrite Users Collection ID
+- **SYSTEM_TEAMS_ID** - Appwrite System Team ID
 <!-- Add your custom environment variables -->
 
-## 🚀 Deployment
+## 🎯 Trigger
+Head over to your function in the Appwrite console and under the Settings Tab, enable the create.*.create event.
 
-There are two ways of deploying the Appwrite function, both having the same results, but each using a different process. We highly recommend using CLI deployment to achieve the best experience.
 
-### Using CLI
-
-Make sure you have [Appwrite CLI](https://appwrite.io/docs/command-line#installation) installed, and you have successfully logged into your Appwrite server. To make sure Appwrite CLI is ready, you can use the command `appwrite client --debug` and it should respond with green text `✓ Success`.
-
-Make sure you are in the same folder as your `appwrite.json` file and run `appwrite deploy function` to deploy your function. You will be prompted to select which functions you want to deploy.
-
-### Manual using tar.gz
-
-Manual deployment has no requirements and uses Appwrite Console to deploy the tag. First, enter the folder of your function. Then, create a tarball of the whole folder and gzip it. After creating `.tar.gz` file, visit Appwrite Console, click on the `Deploy Tag` button and switch to the `Manual` tab. There, set the `entrypoint` to `src/index.js`, and upload the file we just generated.
