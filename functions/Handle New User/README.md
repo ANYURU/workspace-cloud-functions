@@ -13,7 +13,7 @@ The cloud function is designed to perform specific tasks upon the creation of a 
 
 3. Addition of the user to the system team: It adds the user to the system team. If the user is the first to be added as a member or an administrator.
 
-By executing these tasks, the cloud function seamlessly handles the registration process for new users, creating user documents, assigning the appropriate package as well as the right roles in the system.
+By executing these tasks, the cloud function seamlessly handles the registration process for new users, creating user documents, assigning the appropriate package as well as the right roles both at system team level and document level in the users collection system.
 
 
 <!-- Update with your description, for example 'Create Stripe payment and return payment URL' -->
@@ -28,12 +28,12 @@ _Example output:_
 
 <!-- Update with your expected output -->
 This function has no output
-
+<!-- 
 ```json
 {
  "areDevelopersAwesome": true
 }
-```
+``` -->
 
 ## 📝 Environment Variables
 
