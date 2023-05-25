@@ -24,13 +24,13 @@ module.exports = async function (req, res) {
       const databases = new sdk.Databases(client);
       const { Role, Permission, Query } = sdk;
 
-      // const {
-      //   documents: [{ $id: packageID }],
-      // } = await databases.listDocuments(
-      //   req.variables.APPWRITE_DATABASE_ID,
-      //   req.variables.PACKAGES_COLLECTION_ID,
-      //   [Query.equal("name", "Free")]
-      // );
+      const {
+        documents: [{ $id: packageID }],
+      } = await databases.listDocuments(
+        req.variables.APPWRITE_DATABASE_ID,
+        req.variables.PACKAGES_COLLECTION_ID,
+        [Query.equal("name", "Free")]
+      );
 
       const newUser = JSON.parse(req.variables.APPWRITE_FUNCTION_EVENT_DATA);
       const allUsers = await users.list();
@@ -43,17 +43,33 @@ module.exports = async function (req, res) {
         "http://localhost:3000"
       );
 
+      const {
+        documents: [{ $id: defaultOrganisationID }],
+      } = await databases.listDocuments(
+        req.variables.APPWRITE_DATABASE_ID,
+        req.variables.ORGANISATIONS_COLLECTION_ID,
+        [Query.equal("isDefault", true)]
+      );
+
+      let userDetails = {
+        isPremium: false,
+        package: packageID,
+        memberships: [defaultOrganisationID],
+        usersOrganisations:
+          allUsers?.total === 1 ? [defaultOrganisationID] : [],
+      };
+
       const user = await databases.createDocument(
         req.variables.APPWRITE_DATABASE_ID,
         req.variables.USERS_COLLECTION_ID,
         newUser["$id"],
-        {
-          isPremium: false,
-          package: packageID,
-        },
+        userDetails,
         [
-          Permission.read(Role.any()),
-          Permission.update(Role.user(newUser["$id"])),
+          Permission.read(Role.team(req.variables.SYSTEM_TEAM_ID, "member")),
+          Permission.read(Role.team(req.variables.SYSTEM_TEAM_ID, "admin")),
+          Permission.read(
+            Role.team(req.variables.SYSTEM_TEAM_ID, "superadmin")
+          ),
           Permission.update(
             Role.team(req.variables.SYSTEM_TEAM_ID, "superadmin")
           ),
@@ -66,8 +82,6 @@ module.exports = async function (req, res) {
       );
 
       res.json({ user });
-
-      // res.json({ user, packageID });
     } catch (error) {
       res.json(error);
     }
