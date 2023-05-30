@@ -1,0 +1,16 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "description": "This is the appwrite database for the ablestate certify system",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "appwrite",
+    "webhooks",
+    "functions"
+  ],
+  "author": "David Derrick Anyuru",
+  "license": "ISC"
+}
