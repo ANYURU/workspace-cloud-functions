@@ -36,6 +36,8 @@ module.exports = async function (req, res) {
       const allUsers = await users.list();
       const roles = allUsers.total === 1 ? ["superadmin", "owner"] : ["member"];
 
+      
+
       await teams.createMembership(
         req.variables.SYSTEM_TEAM_ID,
         newUser["email"],
@@ -55,6 +57,8 @@ module.exports = async function (req, res) {
         isPremium: false,
         package: packageID,
         memberships: [defaultOrganisationID],
+        name: newUser['name'],
+        email: newUser['email'],
         usersOrganisations:
           allUsers?.total === 1 ? [defaultOrganisationID] : [],
       };
