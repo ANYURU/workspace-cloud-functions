@@ -33,6 +33,21 @@
             "events": [],
             "schedule": "",
             "timeout": 15
+        },
+        {
+            "$id": "6475feb45d041e94140c",
+            "name": "List User Memberships",
+            "runtime": "node-16.0",
+            "path": "functions/List User Memberships",
+            "entrypoint": "src/index.js",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
         }
     ]
 }
